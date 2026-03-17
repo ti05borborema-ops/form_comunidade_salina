@@ -83,6 +83,6 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/dist/index.html'))
 })
 
-app.listen(PORT, () => {
-  console.log(`🚀 Server rodando em http://localhost:${PORT}`)
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`🚀 Server rodando em http://0.0.0.0:${PORT}`)
 })
