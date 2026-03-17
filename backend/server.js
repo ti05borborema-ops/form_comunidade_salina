@@ -3,11 +3,19 @@ const express = require('express')
 const cors = require('cors')
 const nodemailer = require('nodemailer')
 
+const path = require('path')
+
 const app = express()
 const PORT = process.env.PORT || 3001
 
 app.use(cors())
 app.use(express.json())
+
+// Serve static files from the frontend build directory
+app.use(express.static(path.join(__dirname, '../frontend/dist')))
+
+// Serve static files from the frontend build directory
+app.use(express.static(path.join(__dirname, '../frontend/dist')))
 
 // Configure email transporter
 const transporter = nodemailer.createTransport({
@@ -73,6 +81,11 @@ app.post('/api/submit', async (req, res) => {
   }
 })
 
+// Catch-all route to serve the frontend for any other request
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/dist/index.html'))
+})
+
 app.listen(PORT, () => {
-  console.log(`🚀 Backend rodando em http://localhost:${PORT}`)
+  console.log(`🚀 Server rodando em http://localhost:${PORT}`)
 })
