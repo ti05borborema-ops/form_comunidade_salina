@@ -14,9 +14,6 @@ app.use(express.json())
 // Serve static files from the frontend build directory
 app.use(express.static(path.join(__dirname, '../frontend/dist')))
 
-// Serve static files from the frontend build directory
-app.use(express.static(path.join(__dirname, '../frontend/dist')))
-
 // Configure email transporter
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
