@@ -2,6 +2,7 @@ require('dotenv').config()
 const express = require('express')
 const cors = require('cors')
 const nodemailer = require('nodemailer')
+const fs = require('fs')
 
 const path = require('path')
 
@@ -13,6 +14,17 @@ app.set('trust proxy', true)
 
 app.use(cors())
 app.use(express.json())
+
+const FALLBACK_FILE = path.join(__dirname, 'submissions-fallback.log')
+
+function storeFallbackSubmission(payload, reason) {
+  const line = JSON.stringify({
+    createdAt: new Date().toISOString(),
+    reason,
+    ...payload,
+  })
+  fs.appendFileSync(FALLBACK_FILE, `${line}\n`, 'utf8')
+}
 
 // Serve static files from the frontend build directory
 app.use(express.static(path.join(__dirname, '../frontend/dist')))
@@ -77,7 +89,18 @@ app.post('/api/submit', async (req, res) => {
     return res.json({ success: true })
   } catch (error) {
     console.error('❌ Erro ao enviar email:', error)
-    return res.status(500).json({ success: false, error: error.message })
+    // Fallback: nao perde o cadastro quando SMTP estiver indisponivel.
+    try {
+      storeFallbackSubmission({ nome, cpf, telefone }, error.message)
+      return res.json({
+        success: true,
+        fallback: true,
+        message: 'Cadastro salvo com contingencia temporaria de email.',
+      })
+    } catch (fallbackError) {
+      console.error('❌ Erro ao salvar fallback:', fallbackError)
+      return res.status(500).json({ success: false, error: 'Falha temporaria no servidor.' })
+    }
   }
 })
 
