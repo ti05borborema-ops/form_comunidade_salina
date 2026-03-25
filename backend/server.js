@@ -82,7 +82,8 @@ app.post('/api/submit', async (req, res) => {
 })
 
 // Catch-all route to serve the frontend for any other request
-app.get('*', (req, res) => {
+// Use middleware instead of app.get('*') for Express 5 compatibility
+app.use((req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/dist/index.html'))
 })
 
