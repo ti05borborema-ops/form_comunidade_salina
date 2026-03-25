@@ -82,7 +82,7 @@ app.post('/api/submit', async (req, res) => {
 })
 
 // Catch-all route to serve the frontend for any other request
-app.get('/*', (req, res) => {
+app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/dist/index.html'))
 })
 
