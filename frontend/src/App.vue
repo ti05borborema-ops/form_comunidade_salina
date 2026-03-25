@@ -199,29 +199,48 @@ async function handleSubmit() {
   statusError.value = false
 
   try {
+    const controller = new AbortController()
+    const timeout = setTimeout(() => controller.abort(), 15000)
+
     const response = await fetch('/api/submit', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+      signal: controller.signal,
       body: JSON.stringify({
         nome: form.nome,
         cpf: form.cpf,
         telefone: form.telefone,
       }),
     })
+    clearTimeout(timeout)
 
-    const data = await response.json()
+    const contentType = response.headers.get('content-type') || ''
+    let data = {}
 
-    if (data.success) {
+    if (contentType.includes('application/json')) {
+      data = await response.json()
+    } else {
+      await response.text()
+      data = { error: `Resposta inválida do servidor (${response.status})` }
+    }
+
+    if (response.ok && data.success) {
       statusMsg.value = 'Cadastro realizado! Redirecionando para o WhatsApp...'
       statusError.value = false
       setTimeout(() => {
         window.open('https://chat.whatsapp.com/EeiN7l6HQCpE1mzt55vjV6', '_blank')
       }, 1500)
     } else {
-      throw new Error(data.error || 'Erro ao enviar.')
+      throw new Error(data.error || `Erro ao enviar (${response.status})`)
     }
   } catch (err) {
-    statusMsg.value = 'Erro ao enviar os dados. Verifique a conexão com o servidor.'
+    if (err?.name === 'AbortError') {
+      statusMsg.value = 'Tempo de resposta excedido. Tente novamente em alguns segundos.'
+    } else if (err?.message === 'Failed to fetch') {
+      statusMsg.value = 'Falha de conexao com o servidor. Verifique sua internet e tente novamente.'
+    } else {
+      statusMsg.value = err?.message || 'Erro ao enviar os dados. Verifique a conexao com o servidor.'
+    }
     statusError.value = true
     console.error(err)
   } finally {
