@@ -1,10 +1,15 @@
-require('dotenv').config()
+const path = require('path')
+require('dotenv').config({ path: path.join(__dirname, '.env') })
+
+console.log('ENV DEBUG SMTP_USER:', process.env.SMTP_USER)
+console.log('ENV DEBUG SMTP_PASS length:', process.env.SMTP_PASS?.length)
+console.log('ENV DEBUG SMTP_HOST:', process.env.SMTP_HOST)
+console.log('ENV DEBUG SMTP_PORT:', process.env.SMTP_PORT)
+
 const express = require('express')
 const cors = require('cors')
 const nodemailer = require('nodemailer')
 const fs = require('fs')
-
-const path = require('path')
 
 const app = express()
 const PORT = process.env.PORT || 3001
