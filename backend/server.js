@@ -9,6 +9,12 @@ const path = require('path')
 const app = express()
 const PORT = process.env.PORT || 3001
 
+function envValue(name, fallback = '') {
+  const raw = process.env[name]
+  if (raw === undefined || raw === null || raw === '') return fallback
+  return String(raw).trim().replace(/^"|"$/g, '').replace(/^'|'$/g, '')
+}
+
 // CRITICAL: Trust proxy headers from nginx
 app.set('trust proxy', true)
 
@@ -31,12 +37,13 @@ app.use(express.static(path.join(__dirname, '../frontend/dist')))
 
 // Configure email transporter
 const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: parseInt(process.env.SMTP_PORT) || 587,
-  secure: process.env.SMTP_SECURE === 'true', // true for 465, false for other ports
+  host: envValue('SMTP_HOST'),
+  port: parseInt(envValue('SMTP_PORT', '587'), 10) || 587,
+  secure: envValue('SMTP_SECURE', 'false').toLowerCase() === 'true', // true for 465, false for other ports
+  authMethod: envValue('SMTP_AUTH_METHOD', 'LOGIN'),
   auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
+    user: envValue('SMTP_USER'),
+    pass: envValue('SMTP_PASS'),
   },
 })
 
@@ -48,7 +55,7 @@ app.post('/api/submit', async (req, res) => {
   }
 
   const mailOptions = {
-    from: `"Formulário Comunidade Salina Borborema" <${process.env.SMTP_USER}>`,
+    from: `"Formulario Comunidade Salina Borborema" <${envValue('SMTP_USER')}>`,
     to: 'lgpd.salina@salina.com.br',
     subject: `🎉 Usuário ${nome} se cadastrou na comunidade Salina Borborema`,
     html: `
