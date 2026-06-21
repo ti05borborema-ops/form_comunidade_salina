@@ -515,6 +515,8 @@ import { computed, reactive, ref } from 'vue'
 const routePath = window.location.pathname.replace(/\/+$/, '') || '/'
 const isComplaintRoute = routePath === '/180' || window.history.state?.reservedChannel === true
 
+document.title = isComplaintRoute ? 'Canal de Denúncias Salina' : 'Comunidade Salina Supermercados'
+
 if (routePath === '/180' && window.history?.replaceState) {
   window.history.replaceState({ reservedChannel: true }, document.title, '/')
 }
@@ -761,7 +763,11 @@ async function confirmComplaintSubmit() {
     const data = await response.json().catch(() => ({}))
 
     if (!response.ok || !data.success) {
-      throw new Error(data.error || `Falha ao enviar denúncia (${response.status}).`)
+      const fallbackMessage = response.status === 413
+        ? 'O servidor recusou o upload pelo tamanho dos anexos. Envie menos arquivos ou reduza o tamanho dos arquivos anexados.'
+        : `Falha ao enviar denúncia (${response.status}).`
+
+      throw new Error(data.error || fallbackMessage)
     }
 
     showComplaintConfirm.value = false
