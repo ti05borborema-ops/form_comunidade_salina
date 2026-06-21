@@ -760,7 +760,19 @@ async function confirmComplaintSubmit() {
       body: payload,
     })
 
-    const data = await response.json().catch(() => ({}))
+    const contentType = response.headers.get('content-type') || ''
+    let data = {}
+
+    if (contentType.includes('application/json')) {
+      data = await response.json()
+    } else {
+      await response.text()
+      data = {
+        error: response.ok
+          ? 'O servidor respondeu uma página HTML em vez da API de denúncias. Verifique se o backend foi atualizado e reiniciado no servidor.'
+          : `Resposta inválida do servidor (${response.status}).`,
+      }
+    }
 
     if (!response.ok || !data.success) {
       const fallbackMessage = response.status === 413

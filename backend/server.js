@@ -373,6 +373,13 @@ app.post('/api/denuncias', (req, res) => {
   })
 })
 
+app.use('/api', (req, res) => {
+  res.status(404).json({
+    success: false,
+    error: 'Endpoint de API não encontrado. Verifique se o backend está atualizado no servidor.',
+  })
+})
+
 app.use((req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/dist/index.html'))
 })
