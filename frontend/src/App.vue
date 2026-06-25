@@ -541,7 +541,7 @@
 
         <div class="mt-6 space-y-4 text-sm leading-relaxed text-slate-700 md:text-base">
           <p>
-            As informações registradas neste canal serão recebidas pela Salina Supermercados e encaminhadas apenas às pessoas responsáveis pela apuração interna, com tratamento sigiloso, acesso restrito e cuidado adequado à natureza do relato.
+            As informações registradas neste canal serão recebidas e analisadas pelo Compliance do Salina Supermercados, com tratamento sigiloso, acesso restrito e cuidado adequado à natureza do relato.
           </p>
           <p>
             A veracidade das informações prestadas é responsabilidade de quem realiza o registro. Os fatos serão avaliados durante o processo de averiguação, e eventuais providências serão adotadas conforme as normas internas da empresa, a legislação aplicável e os elementos disponíveis para análise.
