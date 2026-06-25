@@ -69,8 +69,15 @@
               </div>
 
               <div class="rounded-2xl border border-[#b9e6f4] bg-[#eef9fd] px-5 py-4 text-sm leading-relaxed text-[#18315f]">
-                <strong class="text-[#1f4298]">Compromisso de confidencialidade.</strong>
-                A identificação é opcional. Quando informada, será preservada e utilizada apenas quando indispensável à análise responsável dos fatos, respeitando o sigilo e a proteção contra retaliações.
+                <strong class="text-[#1f4298]">Compromisso de sigilo.</strong>
+                A identificação é opcional, e as informações serão tratadas de forma reservada durante a apuração interna.
+                <button
+                  type="button"
+                  class="ml-1 font-extrabold text-[#1f4298] underline decoration-[#00a3d7]/50 underline-offset-4 transition hover:text-[#ee1c25]"
+                  @click="showConfidentialityModal = true"
+                >
+                  Clique aqui para consultar as informações sobre sigilo e proteção de dados.
+                </button>
               </div>
 
               <div class="grid gap-5 md:grid-cols-2">
@@ -506,6 +513,67 @@
         </div>
       </div>
     </div>
+
+    <div
+      v-if="showConfidentialityModal"
+      class="fixed inset-0 z-50 flex items-center justify-center bg-[#18315f]/55 px-4 py-6 backdrop-blur-sm"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="confidentiality-title"
+    >
+      <div class="max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-2xl bg-white p-6 shadow-2xl md:p-8">
+        <div class="flex items-start justify-between gap-4">
+          <div>
+            <p class="text-sm font-bold uppercase text-[#00a3d7]">Canal reservado</p>
+            <h2 id="confidentiality-title" class="mt-2 text-2xl font-extrabold text-[#1f4298]">
+              Realizar relato
+            </h2>
+          </div>
+          <button
+            type="button"
+            class="rounded-xl border border-[#d8e6f2] px-3 py-2 text-sm font-bold text-[#1f4298] transition hover:bg-[#eef9fd]"
+            aria-label="Fechar informações sobre sigilo"
+            @click="showConfidentialityModal = false"
+          >
+            Fechar
+          </button>
+        </div>
+
+        <div class="mt-6 space-y-4 text-sm leading-relaxed text-slate-700 md:text-base">
+          <p>
+            As informações registradas neste canal serão recebidas pela Salina Supermercados e encaminhadas apenas às pessoas responsáveis pela apuração interna, com tratamento sigiloso, acesso restrito e cuidado adequado à natureza do relato.
+          </p>
+          <p>
+            A veracidade das informações prestadas é responsabilidade de quem realiza o registro. Os fatos serão avaliados durante o processo de averiguação, e eventuais providências serão adotadas conforme as normas internas da empresa, a legislação aplicável e os elementos disponíveis para análise.
+          </p>
+
+          <h3 class="pt-2 text-base font-extrabold text-[#1f4298]">Proteção de dados</h3>
+
+          <p>
+            Os dados informados serão utilizados exclusivamente para recebimento, triagem, apuração e registro da denúncia, observadas as regras de confidencialidade e proteção de dados pessoais.
+          </p>
+          <p>
+            Quando houver identificação, o nome e os meios de contato informados serão preservados e acessados somente por pessoas autorizadas, na medida necessária à análise do relato ou ao retorno solicitado.
+          </p>
+          <p>
+            Relatos, documentos e anexos poderão ser armazenados pelo tempo necessário à apuração dos fatos, ao cumprimento de obrigações legais e ao resguardo de direitos.
+          </p>
+          <p>
+            Informações consolidadas poderão ser utilizadas para estatísticas e melhoria dos processos internos, sem exposição de nomes, contatos ou dados pessoais individualizados.
+          </p>
+        </div>
+
+        <div class="mt-7 flex justify-end">
+          <button
+            type="button"
+            class="rounded-xl bg-[#1f4298] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#18315f]"
+            @click="showConfidentialityModal = false"
+          >
+            Entendi
+          </button>
+        </div>
+      </div>
+    </div>
   </main>
 </template>
 
@@ -587,6 +655,7 @@ const statusError = ref(false)
 const complaintLoading = ref(false)
 const complaintSent = ref(false)
 const showComplaintConfirm = ref(false)
+const showConfidentialityModal = ref(false)
 const complaintStatus = reactive({
   message: '',
   error: false,
