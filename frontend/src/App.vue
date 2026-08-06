@@ -349,6 +349,60 @@
             </form>
           </template>
 
+          <template v-else-if="isClubRoute">
+            <div class="mx-auto max-w-3xl text-center">
+              <p class="text-sm font-bold uppercase text-[#00a3d7]">Aplicativo oficial</p>
+              <h1 class="mt-2 text-3xl font-extrabold leading-tight text-[#1f4298] md:text-4xl">
+                Aplicativo Clube Salina
+              </h1>
+              <p class="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-slate-600 md:text-lg">
+                Faça o download na loja de aplicativos do seu celular e venha aproveitar nossas ofertas do Clube Salina,
+                as ofertas exclusivas do app, compre online e receba sem sair de casa pelo app e muito mais.
+              </p>
+
+              <div class="mt-6 grid gap-4 sm:grid-cols-2">
+                <a
+                  :href="clubAppLinks.playStore"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="store-button group"
+                  aria-label="Baixar o aplicativo Clube Salina na Google Play"
+                >
+                  <span class="store-button-icon store-button-icon-play" aria-hidden="true">
+                    <svg viewBox="0 0 36 40" class="h-9 w-9">
+                      <path fill="#00a3d7" d="M3.2 1.1c-.7.5-1.1 1.4-1.1 2.6v32.6c0 1.2.4 2.1 1.1 2.6l17-18.9L3.2 1.1Z" />
+                      <path fill="#1f4298" d="m20.2 20 5.5-6.1L6.1 2.5c-1.1-.7-2.1-1.2-2.9-1.4L20.2 20Z" />
+                      <path fill="#ee1c25" d="M20.2 20 3.2 38.9c.8-.2 1.8-.7 2.9-1.4l19.6-11.4L20.2 20Z" />
+                      <path fill="#64d9ff" d="m25.7 13.9 6.3 3.7c2.4 1.4 2.4 3.4 0 4.8l-6.3 3.7L20.2 20l5.5-6.1Z" />
+                    </svg>
+                  </span>
+                  <span class="text-left">
+                    <span class="block text-xs font-bold uppercase tracking-normal text-slate-500">Disponível no</span>
+                    <span class="block text-xl font-extrabold text-[#18315f]">Google Play</span>
+                  </span>
+                </a>
+
+                <a
+                  :href="clubAppLinks.appStore"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="store-button group"
+                  aria-label="Baixar o aplicativo Clube Salina na App Store"
+                >
+                  <span class="store-button-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 28" class="h-9 w-9" fill="currentColor">
+                      <path d="M18.5 14.8c0-3 2.5-4.5 2.6-4.5-1.4-2.1-3.6-2.4-4.4-2.4-1.9-.2-3.6 1.1-4.6 1.1-.9 0-2.4-1.1-4-1.1-2.1 0-4 1.2-5 3.1-2.2 3.8-.6 9.3 1.5 12.4 1 1.5 2.3 3.2 3.9 3.1 1.6-.1 2.2-1 4-1s2.3 1 4 1c1.7 0 2.7-1.5 3.8-3 1.2-1.7 1.6-3.3 1.7-3.4-.1 0-3.5-1.3-3.5-5.4ZM15.5 5.9c.9-1.1 1.5-2.6 1.3-4.1-1.3.1-2.8.8-3.7 1.9-.8.9-1.5 2.5-1.3 3.9 1.4.1 2.8-.7 3.7-1.7Z" />
+                    </svg>
+                  </span>
+                  <span class="text-left">
+                    <span class="block text-xs font-bold uppercase tracking-normal text-slate-500">Baixar na</span>
+                    <span class="block text-xl font-extrabold text-[#18315f]">App Store</span>
+                  </span>
+                </a>
+              </div>
+            </div>
+          </template>
+
           <template v-else>
             <div v-if="!selectedCommunity" class="space-y-7">
               <div class="text-center">
@@ -582,8 +636,13 @@ import { computed, reactive, ref } from 'vue'
 
 const routePath = window.location.pathname.replace(/\/+$/, '') || '/'
 const isComplaintRoute = routePath === '/180' || window.history.state?.reservedChannel === true
+const isClubRoute = routePath === '/clube'
 
-document.title = isComplaintRoute ? 'Canal de Denúncias Salina' : 'Comunidade Salina Supermercados'
+document.title = isComplaintRoute
+  ? 'Canal de Denúncias Salina'
+  : isClubRoute
+    ? 'Aplicativo Clube Salina'
+    : 'Comunidade Salina Supermercados'
 
 if (routePath === '/180' && window.history?.replaceState) {
   window.history.replaceState({ reservedChannel: true }, document.title, '/')
@@ -622,6 +681,11 @@ const yesNoOptions = [
   { value: 'nao', label: 'Não' },
   { value: 'sim', label: 'Sim' },
 ]
+
+const clubAppLinks = {
+  appStore: 'https://apps.apple.com/br/app/clube-salina/id1518854988',
+  playStore: 'https://play.google.com/store/apps/details?id=br.com.gsgroup.zoombox.salina&hl=pt',
+}
 
 const selectedCommunityId = ref('')
 const selectedCommunity = computed(
@@ -1026,6 +1090,51 @@ async function handleSubmit() {
   color: #fff;
 }
 
+.store-button {
+  display: flex;
+  min-height: 5.5rem;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  border-radius: 1rem;
+  border: 1px solid #d8e6f2;
+  background: #fff;
+  padding: 1rem 1.25rem;
+  text-decoration: none;
+  box-shadow: 0 16px 35px rgba(31, 66, 152, 0.1);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.store-button:hover {
+  transform: translateY(-2px);
+  border-color: #00a3d7;
+  box-shadow: 0 22px 45px rgba(31, 66, 152, 0.16);
+}
+
+.store-button:focus-visible {
+  outline: none;
+  border-color: #00a3d7;
+  box-shadow: 0 0 0 3px rgba(0, 163, 215, 0.25), 0 22px 45px rgba(31, 66, 152, 0.16);
+}
+
+.store-button-icon {
+  display: flex;
+  height: 3.5rem;
+  width: 3.5rem;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: 1rem;
+  background: #1f4298;
+  color: #fff;
+  box-shadow: 0 12px 24px rgba(31, 66, 152, 0.18);
+}
+
+.store-button-icon-play {
+  background: #eef9fd;
+  color: #1f4298;
+}
+
 .theme-dark section {
   border-color: #274766;
   background: #101c2f;
@@ -1117,6 +1226,27 @@ async function handleSubmit() {
   background: #1f4298;
   color: #fff;
   box-shadow: 0 10px 25px rgba(100, 217, 255, 0.14);
+}
+
+.theme-dark .store-button {
+  border-color: #31577f;
+  background: #0f1f34;
+  box-shadow: 0 18px 38px rgba(0, 0, 0, 0.28);
+}
+
+.theme-dark .store-button:hover {
+  border-color: #64d9ff;
+  box-shadow: 0 22px 46px rgba(100, 217, 255, 0.12);
+}
+
+.theme-dark .store-button-icon {
+  background: #64d9ff;
+  color: #07111f;
+  box-shadow: 0 12px 24px rgba(100, 217, 255, 0.14);
+}
+
+.theme-dark .store-button-icon-play {
+  background: #14223a;
 }
 
 .theme-dark .theme-toggle {
